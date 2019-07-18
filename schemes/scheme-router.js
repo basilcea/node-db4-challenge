@@ -4,7 +4,7 @@ const Recipes = require('./scheme-model.js');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/recipes/', async (req, res) => {
   try {
     const recipes = await Recipes.getRecipes();
     res.json(recipes);
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id/shoppinglist', async (req, res) => {
+router.get('/recipes/:id/shoppinglist', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -28,7 +28,7 @@ router.get('/:id/shoppinglist', async (req, res) => {
   }
 });
 
-router.get('/:id/instructions', async (req, res) => {
+router.get('/recipes/:id/instructions', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -44,68 +44,17 @@ router.get('/:id/instructions', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  const recipeData = req.body;
-
+router.get('/ingredients/:id/recipes', async (req, res) => {
+  const {id} = req.params
   try {
-    const recipe = await Recipes.add(RecipeData);
+    const recipe = await Recipes.getIngredient(id);
     console.log(recipe)
-    res.status(201).json(recipe);
+    res.status(200).json(recipe);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create new Recipe' });
+    res.status(500).json({ message: 'Failed to Get Recipe' });
   }
 });
 
-router.post('/:id/steps', async (req, res) => {
-  const stepData = req.body;
-  const { id } = req.params; 
 
-  try {
-    const recipe = await Recipes.findById(id);
-
-    if (recipe) {
-      const step = await recipes.addStep(stepData, id);
-      res.status(201).json(step);
-    } else {
-      res.status(404).json({ message: 'Could not find Recipe with given id.' })
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to create new step' });
-  }
-});
-
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const changes = req.body;
-
-  try {
-    const recipe = await Recipes.findById(id);
-
-    if (recipe) {
-      const updatedRecipe = await Recipes.update(changes, id);
-      res.json(updatedRecipe);
-    } else {
-      res.status(404).json({ message: 'Could not find Recipe with given id' });
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to update Recipe' });
-  }
-});
-
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const deleted = await Recipes.remove(id);
-
-    if (deleted) {
-      res.json({ removed: deleted });
-    } else {
-      res.status(404).json({ message: 'Could not find Recipe with given id' });
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to delete Recipe' });
-  }
-});
 
 module.exports = router;

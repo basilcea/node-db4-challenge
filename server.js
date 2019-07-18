@@ -6,6 +6,6 @@ const server = express();
 
 server.use(express.json());
 server.use(express.urlencoded({extended:true}))
-server.use('/api/recipes', SchemeRouter);
+server.use('/api/', SchemeRouter);
 
 module.exports = server;

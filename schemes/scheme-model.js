@@ -21,16 +21,17 @@ async function getInstructions(recipeId){
     .orderBy('steps_no')
 }
 
-async function update(changes ,id) {
-    await  db('schemes').where('id', id).update(changes)
-      return findById(id) ;
+async function getIngredient(id) {
+    return db('Instructions as ins')
+    .select('ing.ingredient','re.recipe_name' )
+    .join('Ingredients as  ing' , 'ing.id', 'ins.ingredient_id')
+    .join('Recipes as re', 're.id', 'ins.recipe_id' )
+    .where('ins.ingredient_id', id)
+      ;
   }
   
-  async function remove(id) {
- await db('schemes').where('id', id).del()
-    return find()
-  }
+
   
   module.exports ={
-      getRecipes , getShoppingList, getInstructions, update , remove
+      getRecipes , getShoppingList, getInstructions, getIngredient
   }
