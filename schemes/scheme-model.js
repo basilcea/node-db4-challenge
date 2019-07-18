@@ -1,24 +1,24 @@
 const db = require('../data/dbConfig')
 
 
-async function find() {
+async function getRecipes() {
     return db('recipes')
   }
 
- async function findById(id) {
-    return  await db('schemes').where('schemes.id', id).first() ;
 
-}
-async function findSteps(id){
-    return db('schemes')
-    .join('steps as st', 'schemes.id','st.scheme_id')
-    .select('st.id','schemes.scheme_name','st.step_number','st.instructions')
-    .where('st.scheme_id', id)
+async function getShoppingList(recipeId){
+
+    return db('Instructions as ins' )
+    .select('ing.ingredient','ins.quantity', 'ing.units')
+    .join('Ingredients as ing', 'ing.id','ins.ingredient_id')
+    .where('ins.recipe_id', recipeId)
 }
 
-async function add(scheme){
-    const [id] = await db('schemes').insert(scheme)
-    return findById(id)
+async function getInstructions(recipeId){
+    return db('Instructions')
+    .select('steps_no','instruction')
+    .where('recipe_id', recipeId)
+    .orderBy('steps_no')
 }
 
 async function update(changes ,id) {
@@ -32,5 +32,5 @@ async function update(changes ,id) {
   }
   
   module.exports ={
-      find , findById, findSteps ,add , update , remove
+      getRecipes , getShoppingList, getInstructions, update , remove
   }

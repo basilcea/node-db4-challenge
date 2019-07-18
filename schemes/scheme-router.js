@@ -6,19 +6,18 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const recipes = await Recipes.find();
+    const recipes = await Recipes.getRecipes();
     res.json(recipes);
   } catch (err) {
     res.status(500).json({ message: 'Failed to get Recipes' });
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id/shoppinglist', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const recipe = await Recipes.findById(id);
-
+    const recipe = await Recipes.getShoppingList(id);
     if (recipe) {
       res.json(recipe);
     } else {
@@ -29,11 +28,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.get('/:id/steps', async (req, res) => {
+router.get('/:id/instructions', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const steps = await Recipes.findSteps(id);
+    const steps = await Recipes.getInstructions(id);
 
     if (steps.length) {
       res.json(steps);
