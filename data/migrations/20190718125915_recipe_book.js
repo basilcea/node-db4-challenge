@@ -3,11 +3,11 @@ exports.up = function(knex) {
     return knex.schema
     .createTable('Recipes', rec => {
         rec.increments();
-        rec.string('recipe_name',128).notNullable();
+        rec.string('recipe_name',128).notNullable().unique();
     })
     .createTable('Ingredients', ing => {
         ing.increments();
-        ing.string('ingredient', 128 ).notNullable();
+        ing.string('ingredient', 128 ).notNullable().unique();
         ing.string('Units', 128). notNullable();
     })
     .createTable('Instructions', ins => {
@@ -19,12 +19,11 @@ exports.up = function(knex) {
             .inTable('Recipe')
             .onUpdate('CASCADE')
             .onDelete('CASCADE')
-        ins.integer('steps_id')
+        ins.integer('steps_No')
             .unsigned()
             .notNullable();
         ins.integer('ingredient_id')
             .unsigned()
-            .notNullable()
             .references('id')
             .inTable('Ingredients')
             .onUpdate('CASCADE')
